@@ -1,0 +1,7 @@
+#output_img {
+  width: 750rpx;
+}
+
+#upload_button {
+
+}

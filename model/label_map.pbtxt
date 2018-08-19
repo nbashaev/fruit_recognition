@@ -1,0 +1,29 @@
+item {
+  id: 1
+  name: 'banana'
+}
+
+item {
+  id: 2
+  name: 'dragonfruit'
+}
+
+item {
+  id: 3
+  name: 'grape'
+}
+
+item {
+  id: 4
+  name: 'pineapple'
+}
+
+item {
+  id: 5
+  name: 'starfruit'
+}
+
+item {
+  id: 6
+  name: 'watermelon'
+}
