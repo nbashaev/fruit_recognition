@@ -1,44 +1,67 @@
 import os
 import sys
-from PIL import Image
-from flask import Flask, request, jsonify
+import time
+from flask import Flask, request, jsonify, render_template, url_for, redirect, session
 from flask_cors import CORS
+from save_labels import store_info, create_tf_record
 from serve import get_model_api
+from storage import Storage
 
-UPLOAD_FOLDER = 'static'
-
-def get_free_filename():
-	n = len(os.listdir(UPLOAD_FOLDER))
-	return "{}.jpg".format(n)
-	
-def save_file(img):
-	path = '/'.join([UPLOAD_FOLDER, get_free_filename()])
-	Image.fromarray(img).save(path)
-	return path
+sys.path.append('..')
+from model.labels import categories
 
 app = Flask(__name__)
 CORS(app)
 
+app.config['SECRET_KEY'] = b'J\x9dU\x0c\xde\xa2aE\x9b\x0b\xc0W\x17\xcfX\xea'
+
 model_api = get_model_api()
 
-# API route
-@app.route('/api', methods=['POST'])
-def api():
-	"""API function
-	All model-specific logic to be defined in the get_model_api()
-	function
-	"""
+images_after_inference = Storage('inference')
+ulabeled_images = Storage('raw')
+
+# Index
+@app.route('/')
+def index():
+	return render_template('index.html')
+
+# API
+@app.route('/api/inference', methods=['POST'])
+def inference():
 	input_data = request.files['img']
 	output_data = model_api(input_data)
-	url = save_file(output_data)
+	url = images_after_inference.save_img(output_data)
 	
 	return jsonify({
 		'url': url
 	})
 
-@app.route('/')
-def index():
-	return "Index API"
+@app.route('/api/raw_upload', methods=['POST'])
+def raw_upload():
+	input_data = request.files['img']
+	raw_img_url = ulabeled_images.save_img(input_data)
+	session['raw_img_url'] = raw_img_url
+	
+	return redirect(url_for('label'))
+
+@app.route('/api/labeled_upload', methods=['POST'])
+def labeled_upload():
+	store_info({
+		'path': session['raw_img_url'],
+		'labels': request.json['labels']
+	})
+	
+	session['raw_img_url'] = None
+	
+	return redirect(url_for('label'))
+
+# Label images page
+@app.route('/label', methods=['GET'])
+def label():
+	if (not 'raw_img_url' in session or session['raw_img_url'] is None):
+		return render_template('choose_image.html')
+	
+	return render_template('label.html', passed_url=session['raw_img_url'], categories=categories, v=int(time.time()))
 
 # HTTP Errors handlers
 @app.errorhandler(404)

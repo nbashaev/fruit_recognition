@@ -3,22 +3,12 @@ import sys
 import numpy as np
 
 import tensorflow as tf
-
-from utils import label_map_util
 from utils import visualization_utils as vis_util
-
+from model.labels import category_index
 
 dirname = os.path.dirname(os.path.realpath(__file__))
-
 PATH_TO_CKPT = os.path.join(dirname, 'inference_graph', 'frozen_inference_graph.pb')
-PATH_TO_LABELS = os.path.join(dirname, 'label_map.pbtxt')
 
-NUM_CLASSES = 6
-
-
-label_map = label_map_util.load_labelmap(PATH_TO_LABELS)
-categories = label_map_util.convert_label_map_to_categories(label_map, max_num_classes=NUM_CLASSES, use_display_name=True)
-category_index = label_map_util.create_category_index(categories)
 
 class BaseModel():
 	def __init__(self):
@@ -26,6 +16,7 @@ class BaseModel():
 
 		with detection_graph.as_default():
 			od_graph_def = tf.GraphDef()
+			
 			with tf.gfile.GFile(PATH_TO_CKPT, 'rb') as fid:
 				serialized_graph = fid.read()
 				od_graph_def.ParseFromString(serialized_graph)
@@ -38,19 +29,21 @@ class BaseModel():
 		self.detection_scores = detection_graph.get_tensor_by_name('detection_scores:0')
 		self.detection_classes = detection_graph.get_tensor_by_name('detection_classes:0')
 		self.num_detections = detection_graph.get_tensor_by_name('num_detections:0')
+		
+		self.__predict_raw(np.ndarray(shape=(1,224,224,3), dtype=float, order='F'))
 	
-	def prepare_input(self, img):
+	def __prepare_input(self, img):
 		return np.expand_dims(img, axis=0)
 	
-	def predict_raw(self, img):
+	def __predict_raw(self, img):
 		return self.sess.run(
 			[self.detection_boxes, self.detection_scores, self.detection_classes, self.num_detections],
 			feed_dict={self.image_tensor: img}
 		)
 	
 	def predict(self, img):
-		expanded_img = self.prepare_input(img)
-		boxes, scores, classes, num = self.predict_raw(expanded_img)
+		expanded_img = self.__prepare_input(img)
+		boxes, scores, classes, num = self.__predict_raw(expanded_img)
 		
 		return {
 			'boxes': boxes,
