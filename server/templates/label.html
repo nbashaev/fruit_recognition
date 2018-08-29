@@ -1,50 +1,44 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<title>Label</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"></link>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-	
-	<link href="/static/styles/label.css?v={{v}}" rel="stylesheet"></link>
-	<script src="/static/scripts/label.js?v={{v}}"></script>
-	
-</head>
-<body>
-
-<img id="hide_img" src="{{ passed_url }}"></img>
-
-
-<div id="sidebar">
-	
-	<div class="input-group dropdown">
-		<text id="class_name" class="form-control custom-control" style="resize:none">{{categories[0].name}}</text>
+	<head>
+		<title>Label</title>
 		
-		<span class="input-group-btn" id="label_dropdown">
-			<button class="btn btn-warning dropdown-toggle" data-toggle="dropdown">?</button>
+		<script src="/static/scripts/jquery.min.js"></script>
+		<link href="/static/styles/bootstrap.min.css" rel="stylesheet"></link>
+		<script src="/static/scripts/bootstrap.min.js"></script>
 		
-			<ul class="dropdown-menu dropdown-menu-right">
+		<script src="/static/scripts/label.js?v={{v}}"></script>
+		<link href="/static/styles/label.css?v={{v}}" rel="stylesheet"></link>
+	</head>
+	
+	<body>
+		<img id="hidden_img" src="{{ passed_url }}"></img>
+
+		<div id="sidebar">
+			<div class="btn-group btn-group-justified" role="group">
+				<div class="btn-group" role="group">
+					<button id="back_button" class="btn btn-default" type="button">back</button>
+				</div>
+				
+				<div id="label_dropdown" class="btn-group dropdown" role="group">
+					<text id="class_name" class="form-control btn btn-warning dropdown-toggle" data-toggle="dropdown">{{categories[0].name}}</text>
+				
+					<ul class="dropdown-menu dropdown-menu-right">
+						{% for category in categories %}
+							<li class="dropdown-item"><a href="#">{{category.name}}</a></li>
+						{% endfor %}
+					</ul>
+				</div>
+			</div>
+				
+			<div id="labels_list" class="list-group"></div>
 			
-			{% for category in categories %}
-				<li class="dropdown-item"><a href="#">{{category.name}}</a></li>
-			{% endfor %}
-			
-			</ul>
-		</span>
-	</div>
-		
-	<div class="list-group" id="labels_list"></div>
-	<button id="send_button" class="btn btn-success btn-block" type="button">SEND DATA</button>
-	
-</div>
+			<button id="send_button" class="btn btn-success btn-block" type="button">SEND DATA</button>
+		</div>
 
 
-<div id="content" class="container">
-	<canvas id="canvas"></canvas>
-</div>
-
-
-</body>
+		<div id="content" class="container">
+			<canvas id="canvas"></canvas>
+		</div>
+	</body>
 </html>

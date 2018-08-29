@@ -112,6 +112,11 @@ function reload_all() {
 	draw_labels();
 }
 
+function to_root()
+{
+	window.location.replace("/");
+}
+
 function send_data() {
 	
 	if (labels.length == 0) {
@@ -128,11 +133,12 @@ function send_data() {
 		data: JSON.stringify({labels: labels}),
 		dataType: "json",
 		contentType: "application/json"
-	}).always(function (data) {location.reload();});
+	}).always(to_root);
 }
 
 $(window).on("load", function() {
 	
+	$("#back_button").click(to_root);
 	$("#send_button").click(send_data);
 	
 	$("#label_dropdown").on("click", "li", function (e) {
@@ -140,7 +146,7 @@ $(window).on("load", function() {
 		$('#class_name').text(label);
 	});
 	
-	canvas_wrapper = new ImageCanvas($("#canvas").get(0), $("#hide_img").get(0));
+	canvas_wrapper = new ImageCanvas($("#canvas").get(0), $("#hidden_img").get(0));
 	labels = [];
 	
 	reload_all();

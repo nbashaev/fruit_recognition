@@ -1,1 +1,1 @@
-# __init__ turns this directory into a module
+# __init__.py turns this directory into a module

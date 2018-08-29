@@ -1,10 +1,57 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Index</title>
-</head>
-<body>
-	<p>You are welcome on the main page! Try the following links:</p>
-	<a href="/label">label</a>
-</body>
+	<head>
+		<title>Upload</title>
+		
+		<script src="/static/scripts/jquery.min.js"></script>
+		<link href="/static/styles/bootstrap.min.css" rel="stylesheet"></link>
+		<script src="/static/scripts/bootstrap.min.js"></script>
+		
+		<script src="/static/scripts/index.js?v={{v}}"></script>
+		<link href="/static/styles/index.css?v={{v}}" rel="stylesheet"></link>
+	</head>
+	
+	<body>
+		<form action="api/raw_upload" id="inference_form" enctype="multipart/form-data" method="POST" class="btn-group btn-group-justified" role="group">
+			
+			<div class="btn-group" role="group">
+				<input type="file" id="input_img" name="img" accept="image/*" class="btn btn-default form-control-file">
+			</div>
+			
+			<div class="btn-group" role="group">
+				<button type="submit" class="btn btn-default non-active">choose your image</button>
+			</div>
+			
+			<div class="btn-group" role="group">
+				<button type="submit" id="inference_submit_button" class="btn btn-info non-active">inference</button>
+			</div>
+			
+			<div class="btn-group" role="group">
+				<button type="submit" id="label_submit_button" class="btn btn-info non-active">label manually</button>
+			</div>
+			
+		</form>
+
+		<img id="labeled_img" src=""></img>
+
+		<div id="modalWindow" class="modal fade">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					
+					<div class="modal-header">
+						<h3 class="modal-title">The image is being processed...</h3>
+					</div>
+					
+					<div class="modal-body">
+						<h4>It may take a few seconds. Please, wait.</h4>
+						
+						<div class="progress">
+							<div class="progress-bar progress-bar-info progress-bar-striped active" role="progressbar" aria-valuenow="100%" style="width: 100%"></div>
+						</div>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+	</body>
 </html>

@@ -6,8 +6,17 @@ import tensorflow as tf
 from utils import visualization_utils as vis_util
 from model.labels import category_index
 
+def get_model_name():
+	fin = open(PATH_TO_VERSION, 'r')
+	name = '{}.pb'.format(fin.readline())
+	fin.close()
+	
+	return name
+
+
 dirname = os.path.dirname(os.path.realpath(__file__))
-PATH_TO_CKPT = os.path.join(dirname, 'inference_graph', 'frozen_inference_graph.pb')
+PATH_TO_VERSION = os.path.join(dirname, 'model_version.txt')
+PATH_TO_CKPT = os.path.join(dirname, 'inference_graph', get_model_name())
 
 
 class BaseModel():
@@ -23,7 +32,7 @@ class BaseModel():
 				tf.import_graph_def(od_graph_def, name='')
 			
 			self.sess = tf.Session(graph=detection_graph)
-	
+		
 		self.image_tensor = detection_graph.get_tensor_by_name('image_tensor:0')
 		self.detection_boxes = detection_graph.get_tensor_by_name('detection_boxes:0')
 		self.detection_scores = detection_graph.get_tensor_by_name('detection_scores:0')
