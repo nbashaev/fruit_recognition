@@ -6,6 +6,6 @@ Basically, it's a Flask server intended to store a tensorflow object detection m
 - Allows users to manually label images
 - Converts newly collected data to tf-records
 
-This server was written solely for educational purposes and I do realize that it contains a lot of vulnerabilities. See the live demo here and don't crash it ;)
+This server was written solely for educational purposes and I do realize that it contains a lot of vulnerabilities. See the live demo [here](http://ucomputingchain.com:5000) and do not crash it intentionally ;)
 
 I should mention here that labelling part originated from [simple_image_annotator](https://github.com/sgp715/simple_image_annotator). It was noticeably redesigned though.

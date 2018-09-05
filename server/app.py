@@ -14,8 +14,6 @@ from storage import Storage
 app = Flask(__name__)
 CORS(app)
 
-app.config['BATCH_SIZE'] = 3
-app.config['DATA_FOLDER'] = os.path.join('..', 'data')
 app.config['SECRET_KEY'] = b'J\x9dU\x0c\xde\xa2aE\x9b\x0b\xc0W\x17\xcfX\xea'
 
 images_after_inference = Storage('inference')
