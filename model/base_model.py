@@ -7,9 +7,8 @@ from utils import visualization_utils as vis_util
 from model.labels import category_index
 
 def get_model_name():
-	fin = open(PATH_TO_VERSION, 'r')
-	name = '{}.pb'.format(fin.readline())
-	fin.close()
+	with open(PATH_TO_VERSION, 'r') as fver:
+		name = '{}.pb'.format(fver.readline().strip())
 	
 	return name
 
